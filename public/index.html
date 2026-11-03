@@ -42,9 +42,9 @@ h1,h2,h3,p{overflow-wrap:anywhere}
 .skip-link:focus{transform:translateY(0)}
 :focus-visible{outline:3px solid #e1b95d;outline-offset:3px;border-radius:6px}
 .site-header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}
-.nav{min-height:86px;display:flex;align-items:center;gap:24px}
+.nav{min-height:88px;display:flex;align-items:center;gap:24px}
 .brand{display:flex;align-items:center;gap:11px;font-weight:800;min-width:0}
-.brand img{width:100px;height:72px;object-fit:cover;object-position:center;border-radius:10px;background:#fff;flex:none}
+.brand img{width:220px;height:76px;object-fit:contain;object-position:left center;border-radius:0;background:transparent;flex:none}
 .brand span{line-height:1.05;white-space:nowrap}
 .brand small{display:block;margin-top:5px;font-size:9px;letter-spacing:1.7px;color:var(--muted);font-weight:800}
 .desktop-nav{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800}
@@ -105,7 +105,7 @@ footer{background:#02291e;color:#c9d8d1;padding:28px 0}
 }
 @media(max-width:800px){
  html{scroll-padding-top:84px}.wrap{width:min(100% - 28px,760px)}
- .nav{min-height:72px;gap:10px}.brand{gap:9px}.brand img{width:72px;height:56px;border-radius:12px}.brand span{font-size:17px}.brand small{font-size:7.5px;letter-spacing:1.1px}
+ .nav{min-height:72px;gap:10px}.brand{gap:9px}.brand img{width:165px;height:58px;border-radius:0}.brand span{font-size:17px}.brand small{font-size:7.5px;letter-spacing:1.1px}
  .hero{padding:18px 0 44px}.hero-grid{gap:16px}.hero-media img{border-radius:20px}.hero-copy{border-radius:22px;padding:36px 24px}
  .hero h1{font-size:clamp(36px,11vw,50px)}.hero p{font-size:16px}.actions{flex-direction:column;align-items:stretch}.btn{width:100%}.trust{margin-top:28px;gap:8px 16px}
  .section{padding:54px 0}.grid,.two{grid-template-columns:1fr}.head{margin-bottom:28px}.card{padding:23px}.audience{padding:28px}.audience h2{font-size:30px}
@@ -122,8 +122,8 @@ footer{background:#02291e;color:#c9d8d1;padding:28px 0}
 <header class="site-header">
   <div class="wrap nav">
     <a class="brand" href="/" aria-label="TGPU Wellness home">
-      <img src="/assets/TGPU%20Wellness%20Green%20Gold%20Logo.png" alt="TGPU Wellness logo" width="100" height="72" decoding="async">
-      <span>TGPU Wellness<small>LEARN • PRACTISE • LIVE WELL</small></span>
+      <img src="/assets/TGPU%20Wellness%20Green%20Gold%20Logo.png" alt="TGPU Wellness logo" width="220" height="76" decoding="async">
+      
     </a>
     <nav class="desktop-nav" aria-label="Primary navigation">
       <a href="#modules">Daily Wellness</a>
