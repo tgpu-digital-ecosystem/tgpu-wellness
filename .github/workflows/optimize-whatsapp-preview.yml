@@ -1,0 +1,58 @@
+name: Optimize TGPU Wellness WhatsApp preview
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/optimize-whatsapp-preview.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  optimize:
+    name: Create compact social JPEG and update Open Graph image
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Create WhatsApp-friendly JPEG from approved uploaded artwork
+        run: |
+          python -m pip install --disable-pip-version-check pillow
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import re
+          source = Path('public/a_vibrant_detailed_promotional_banner_in_the_sam.png')
+          assert source.is_file() and source.stat().st_size > 0, 'Approved banner missing'
+          with Image.open(source) as original:
+              im = original.convert('RGB')
+              # Keep the approved artwork intact; resize proportionally.
+              im.thumbnail((1200, 1200), Image.Resampling.LANCZOS)
+              im.save('public/wellness-whatsapp-preview.jpg', format='JPEG', quality=73, optimize=True, progressive=False)
+          image = Path('public/wellness-whatsapp-preview.jpg')
+          assert image.stat().st_size < 450000, f'Optimized image too large: {image.stat().st_size}'
+          p = Path('public/index.html')
+          html = p.read_text(encoding='utf-8')
+          old = 'https://wellness.tgpu.my/a_vibrant_detailed_promotional_banner_in_the_sam.png'
+          new = 'https://wellness.tgpu.my/wellness-whatsapp-preview.jpg'
+          assert html.count(old) >= 3, 'Expected OG image references absent'
+          html = html.replace(old, new)
+          html = html.replace('<meta property="og:image:type" content="image/png">','<meta property="og:image:type" content="image/jpeg">')
+          html = re.sub(r'<meta property="og:image:width" content="[^"]+">', f'<meta property="og:image:width" content="{im.width}">', html)
+          html = re.sub(r'<meta property="og:image:height" content="[^"]+">', f'<meta property="og:image:height" content="{im.height}">', html)
+          assert '<meta property="og:image" content="'+new+'">' in html
+          assert '<meta name="twitter:image" content="'+new+'">' in html
+          p.write_text(html, encoding='utf-8')
+          print('WhatsApp JPEG:', im.size, 'bytes:', image.stat().st_size)
+          PY
+      - name: Commit safe static image and metadata
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/wellness-whatsapp-preview.jpg public/index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Optimize Wellness WhatsApp banner under 450 KB"
+            git push origin HEAD:main
+          fi
