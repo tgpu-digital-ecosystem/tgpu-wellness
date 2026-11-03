@@ -1,0 +1,51 @@
+name: TGPU Wellness — Repository Integrity
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    name: Verify dedicated Wellness website
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout Wellness repository only
+        uses: actions/checkout@v4
+      - name: Validate standalone Wellness source and assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s public/index.html
+          test -s public/404.html
+          test -s public/tgpu-feedback.js
+          test -s public/tgpu-feedback.css
+          test -s public/assets/TGPU\ Wellness\ Green\ Gold\ Logo.png
+          test -s public/assets/a_vibrant_detailed_promotional_banner_in_the_sam.png
+          test -s public/assets/family-hero.webp
+          test -s public/robots.txt
+          test -s public/sitemap.xml
+          test -s wrangler.jsonc
+          node --check public/tgpu-feedback.js
+          node --check public/legacy-wellness/app.js
+          node --check public/legacy-wellness/app-base.js
+          node --check public/legacy-wellness/products4.js
+          node - <<'NODE'
+          const fs = require("node:fs");
+          const assert = require("node:assert/strict");
+          const html = fs.readFileSync("public/index.html", "utf8");
+          const wrangler = JSON.parse(fs.readFileSync("wrangler.jsonc", "utf8"));
+          assert.match(html, /<title>TGPU Wellness/);
+          assert.match(html, /https:\/\/wellness\.tgpu\.my\//);
+          assert.match(html, /a_vibrant_detailed_promotional_banner_in_the_sam\.png/);
+          assert.match(html, /TGPU%20Wellness%20Green%20Gold%20Logo\.png/);
+          assert.equal(wrangler.name, "tgpu-wellness");
+          assert.equal(wrangler.assets.directory, "./public");
+          for (const p of ["public/kunyit-hitam/index.html", "public/moringa/index.html", "public/sacha-inchi/index.html", "public/tongkat-ali/index.html"]) {
+            assert.ok(fs.statSync(p).size > 0, "missing subpage: "+p);
+          }
+          console.log("PASS: standalone Wellness website, approved branding, JS, pages and Worker configuration");
+          NODE
