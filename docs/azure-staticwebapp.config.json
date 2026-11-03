@@ -1,0 +1,27 @@
+{
+  "globalHeaders": {
+    "Content-Security-Policy": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'none'; upgrade-insecure-requests",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=()"
+  },
+  "routes": [
+    { "route": "/", "headers": { "Cache-Control": "no-cache, must-revalidate" } },
+    { "route": "/index.html", "headers": { "Cache-Control": "no-cache, must-revalidate" } },
+    { "route": "/*.png", "headers": { "Cache-Control": "public, max-age=31536000, immutable" } },
+    { "route": "/robots.txt", "headers": { "Cache-Control": "public, max-age=3600" } },
+    { "route": "/sitemap.xml", "headers": { "Cache-Control": "public, max-age=3600" } },
+    { "route": "/kunyit-hitam", "redirect": "/", "statusCode": 301 },
+    { "route": "/kunyit-hitam/*", "redirect": "/", "statusCode": 301 },
+    { "route": "/moringa", "redirect": "/", "statusCode": 301 },
+    { "route": "/moringa/*", "redirect": "/", "statusCode": 301 },
+    { "route": "/sacha-inchi", "redirect": "/", "statusCode": 301 },
+    { "route": "/sacha-inchi/*", "redirect": "/", "statusCode": 301 },
+    { "route": "/tongkat-ali", "redirect": "/", "statusCode": 301 },
+    { "route": "/tongkat-ali/*", "redirect": "/", "statusCode": 301 }
+  ],
+  "responseOverrides": {
+    "404": { "rewrite": "/404.html" }
+  }
+}
